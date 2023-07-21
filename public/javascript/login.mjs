@@ -1,8 +1,10 @@
 const username = sessionStorage.getItem('username');
 
+
 if (username) {
 	window.location.replace('/game');
 }
+
 
 const submitButton = document.getElementById('submit-button');
 const input = document.getElementById('username-input');
