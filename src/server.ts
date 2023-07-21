@@ -5,7 +5,6 @@ import socketHandler from './socket';
 import routes from './routes';
 import { STATIC_PATH, PORT } from './config';
 
-console.log(1)
 const app = express();
 const httpServer = new http.Server(app);
 const socketIo = new Server(httpServer);
