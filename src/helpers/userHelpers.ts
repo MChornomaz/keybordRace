@@ -28,3 +28,22 @@ export const userJoin = (id: string, userName: string, currentRoom: string) => {
 export const userLeave = (id: string) => {
   activeUsers = activeUsers.filter(user => user.id !== id)
 }
+
+export const getUserById = (id: string): User | null => {
+  const user = activeUsers.find(user => user.id === id);
+
+  if (!user) return null
+
+  return user
+
+}
+
+export const setUserRoom = (userId: string, roomName: string) => {
+  const user = getUserById(userId);
+  const userIndex = activeUsers.findIndex(user => user.id === userId);
+
+  if (user && (userIndex !== -1)) {
+    user.currentRoom = roomName;
+    activeUsers[userIndex] = user;
+  }
+}
