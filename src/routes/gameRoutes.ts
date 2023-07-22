@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import path from 'path';
 import { HTML_FILES_PATH } from '../config';
-import { getActiveRooms } from '../helpers/roomsHelpers';
+import { getVisibleRooms } from '../helpers/roomsHelpers';
+import { MAXIMUM_USERS_FOR_ONE_ROOM } from '../socket/config';
 
 const router = Router();
 
@@ -11,8 +12,12 @@ router.get('/', (req, res) => {
 });
 
 router.get('/rooms', (req, res, next) => {
-	const rooms = getActiveRooms();
-	res.json(rooms)
+	const rooms = getVisibleRooms(MAXIMUM_USERS_FOR_ONE_ROOM);
+	const data = {
+		rooms,
+		maxUsers: MAXIMUM_USERS_FOR_ONE_ROOM
+	}
+	res.json(data)
 })
 
 export default router;

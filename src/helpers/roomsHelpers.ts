@@ -12,6 +12,10 @@ export const getActiveRooms = (): Room[] => {
   return activeRooms
 }
 
+export const getVisibleRooms = (amount: number) => {
+  return activeRooms.filter(room => room.activeUsers.length <= amount)
+}
+
 export const checkRoomNameExistence = (roomName: string): boolean => {
   const index = activeRooms.findIndex(
     room => room.name.trim().toLowerCase() === roomName.trim().toLowerCase())
@@ -59,4 +63,20 @@ export const addUserToRoom = (userId: string, roomId: string) => {
     room.activeUsers.push(user);
     setUserRoom(userId, room.name)
   }
+  console.log(room?.activeUsers)
 }
+
+export const removeUserFromRoom = (userId: string, roomId: string) => {
+  const user = getUserById(userId);
+  const room = getRoomById(roomId);
+
+  console.log('USER', user)
+  console.log('ROOM', room)
+
+  if (user && room) {
+    room.activeUsers = room.activeUsers.filter(user => user.id !== userId)
+    setUserRoom(userId, '')
+  }
+  console.log('active users on remove', room?.activeUsers)
+}
+

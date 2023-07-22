@@ -1,7 +1,8 @@
 import { showInputModal, showMessageModal } from "./views/modal.mjs";
-import { appendRoomElement, updateNumberOfUsersInRoom } from "./views/room.mjs";
+import { appendRoomElement, removeRoomElement, updateNumberOfUsersInRoom } from "./views/room.mjs";
 
 const username = sessionStorage.getItem('username');
+sessionStorage.removeItem('roomId');
 
 if (!username) {
 	window.location.replace('/login');
@@ -10,8 +11,8 @@ if (!username) {
 const fetchRooms = async () => {
 	try {
 		const data = await fetch('http://localhost:3002/game/rooms')
-		const rooms = await data.json()
-		outputRooms(rooms)
+		const roomsData = await data.json()
+		outputRooms(roomsData.rooms, roomsData.maxUsers)
 	} catch (error) {
 		console.log(error.message)
 	}
@@ -56,9 +57,19 @@ const createRoomBtnClickHandler = () => {
 	})
 }
 
-// socket.on('roomCreated', (roomId) => {
-// 	socket.emit('JoinRoom', roomId)
-// })
+const showGame = () => {
+	gamePage.classList.remove('display-none')
+	roomPage.classList.add('display-none')
+}
+
+const gamePage = document.getElementById('game-page')
+const roomPage = document.getElementById('rooms-page')
+
+socket.on('roomCreated', (roomId) => {
+	socket.emit('JoinRoom', roomId)
+	sessionStorage.setItem('roomId', roomId)
+	showGame()
+})
 
 createRoomBtn.addEventListener('click', createRoomBtnClickHandler)
 
@@ -71,29 +82,52 @@ socket.on('roomExists', (roomName) => {
 
 
 
-function outputRooms (rooms) {
+function outputRooms (rooms, maxUsers) {
 	const roomsContainer = document.querySelector('#rooms-wrapper');
 	roomsContainer.innerHTML = ''
 	rooms.forEach(room => {
-		const roomData = {
-		name: room.name,
-		numberOfUsers: room.activeUsers.length,
-		onJoin : () => {
-			socket.emit('JoinRoom', room.id)
-			updateNumberOfUsersInRoom({name: room.name, numberOfUsers: room.activeUsers.length + 1})
+
+		if(room.activeUsers.length < maxUsers){
+			const roomData = {
+				name: room.name,
+				numberOfUsers: room.activeUsers.length,
+				onJoin : () => {
+					socket.emit('JoinRoom', room.id)
+					updateNumberOfUsersInRoom({name: room.name, numberOfUsers: room.activeUsers.length + 1})
+					sessionStorage.setItem('roomId', room.id)
+					showGame()
 		}
 	}
 	appendRoomElement(roomData)
+		}
 	})
 }
 
-socket.on('getActiveRooms', (rooms) => {
-	outputRooms(rooms)
+socket.on('getActiveRooms', (rooms, mavValue) => {
+	outputRooms(rooms, mavValue)
 })
 
-socket.on('updateRoomUserCount', ({name, numberOfUsers}) => {
-	updateNumberOfUsersInRoom({name, numberOfUsers})
+socket.on('updateRoomUserCount', ({name, numberOfUsers, maxValue}) => {
+	const currentUserAmount = document.querySelector(`.connected-users[data-room-name='${name}']`).dataset.roomNumberOfUsers;
+
+	if(parseInt(currentUserAmount, 10) >= maxValue){
+		removeRoomElement(name)
+	} else {
+		updateNumberOfUsersInRoom({name, numberOfUsers})
+	}
 })
+
+const leaveRoomBtn = document.getElementById('quit-room-btn');
+
+const leaveRoomHandler = () => {
+	const roomId = sessionStorage.getItem('roomId');
+	socket.emit('LeaveRoom', roomId)
+	sessionStorage.removeItem('roomId');
+	gamePage.classList.add('display-none')
+	roomPage.classList.remove('display-none')
+}
+
+leaveRoomBtn.addEventListener('click', leaveRoomHandler)
 
 
 

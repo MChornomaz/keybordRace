@@ -47,3 +47,10 @@ export const setUserRoom = (userId: string, roomName: string) => {
     activeUsers[userIndex] = user;
   }
 }
+
+export const clearUserCurrentRoom = (userId: string) => {
+  const user = getUserById(userId);
+  if (user) {
+    user.currentRoom = ''
+  }
+}

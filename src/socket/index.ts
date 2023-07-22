@@ -1,11 +1,12 @@
 import { Server } from 'socket.io';
 import * as config from './config';
-import { checkUserNameExistence, userJoin, userLeave } from '../helpers/userHelpers';
-import { addUserToRoom, checkRoomNameExistence, createRoom, getActiveRooms, getRoomById } from '../helpers/roomsHelpers';
+import { checkUserNameExistence, clearUserCurrentRoom, userJoin, userLeave } from '../helpers/userHelpers';
+import { addUserToRoom, checkRoomNameExistence, createRoom, deleteRoom, getActiveRooms, getRoomById, removeUserFromRoom } from '../helpers/roomsHelpers';
 
 export default (io: Server) => {
 	io.on('connection', socket => {
 		let username = socket.handshake.query.username;
+		const maximum_users_for_room = config.MAXIMUM_USERS_FOR_ONE_ROOM;
 		if (Array.isArray(username)) {
 			username = username.join(' ')
 		}
@@ -27,11 +28,10 @@ export default (io: Server) => {
 				} else {
 					const newRoom = createRoom(roomName);
 					const roomId = newRoom.id;
-					addUserToRoom(socket.id, roomId);
 					socket.emit('roomCreated', roomId);
 
 					const rooms = getActiveRooms();
-					io.emit('getActiveRooms', rooms);
+					io.emit('getActiveRooms', rooms, maximum_users_for_room);
 				}
 			});
 
@@ -40,18 +40,35 @@ export default (io: Server) => {
 				if (room) {
 					socket.join(room.name);
 					addUserToRoom(socket.id, roomId);
-					socket.emit('updateRoomUserCount', { name: room.name, numberOfUsers: room.activeUsers.length });
+
+					socket.emit('updateRoomUserCount', { name: room.name, numberOfUsers: room.activeUsers.length, maxValue: maximum_users_for_room });
 
 					const rooms = getActiveRooms();
-					io.emit('getActiveRooms', rooms);
+					io.emit('getActiveRooms', rooms, maximum_users_for_room);
 				}
 			});
+
+			socket.on('LeaveRoom', (roomId: string) => {
+				const currentRoom = getRoomById(roomId);
+				if (currentRoom) {
+					socket.leave(currentRoom.id);
+					removeUserFromRoom(socket.id, roomId)
+					clearUserCurrentRoom(socket.id)
+
+					if (currentRoom.activeUsers.length === 0) {
+						deleteRoom(roomId)
+					}
+				}
+
+				const rooms = getActiveRooms();
+				io.emit('getActiveRooms', rooms, maximum_users_for_room);
+			})
 
 			socket.on('disconnect', () => {
 				userLeave(socket.id);
 
 				const rooms = getActiveRooms();
-				io.emit('getActiveRooms', rooms);
+				io.emit('getActiveRooms', rooms, maximum_users_for_room);
 			});
 		}
 	});

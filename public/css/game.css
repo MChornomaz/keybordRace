@@ -13,3 +13,6 @@
   border: 2px solid gray;
 }
 
+.hidden{
+  display: none;
+}
