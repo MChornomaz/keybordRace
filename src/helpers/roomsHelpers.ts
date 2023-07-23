@@ -1,19 +1,23 @@
+import { MAXIMUM_USERS_FOR_ONE_ROOM } from "../socket/config";
 import { User, getUserById, setUserRoom } from "./userHelpers";
 
 export interface Room {
   id: string;
   name: string;
   activeUsers: User[];
+  isVisible: boolean
 }
 
 let activeRooms: Room[] = [];
 
 export const getActiveRooms = (): Room[] => {
-  return activeRooms
+  return activeRooms.filter(room => room.isVisible)
 }
 
-export const getVisibleRooms = (amount: number) => {
-  return activeRooms.filter(room => room.activeUsers.length <= amount)
+
+
+export const getVisibleRooms = () => {
+  return activeRooms.filter(room => room.isVisible)
 }
 
 export const checkRoomNameExistence = (roomName: string): boolean => {
@@ -32,7 +36,8 @@ export const createRoom = (roomName: string): Room => {
   const newRoom = {
     id: roomId,
     name: roomName,
-    activeUsers: []
+    activeUsers: [],
+    isVisible: true
   }
 
   activeRooms.push(newRoom);
@@ -55,6 +60,27 @@ export const getRoomById = (id: string): Room | null => {
   return room
 }
 
+export const makeRoomVisible = (roomId: string) => {
+  const room = getRoomById(roomId);
+  if (room) {
+    room.isVisible = true;
+  }
+}
+
+export const makeRoomInvisible = (roomId: string) => {
+  const room = getRoomById(roomId);
+  if (room) {
+    room.isVisible = false;
+  }
+}
+
+export const getRoomByName = (name: string): Room | null => {
+  const room = activeRooms.find(room => room.name === name);
+  if (!room) return null;
+
+  return room
+}
+
 export const addUserToRoom = (userId: string, roomId: string) => {
   const user = getUserById(userId);
   const room = getRoomById(roomId);
@@ -62,21 +88,32 @@ export const addUserToRoom = (userId: string, roomId: string) => {
   if (user && room) {
     room.activeUsers.push(user);
     setUserRoom(userId, room.name)
+    if (room.activeUsers.length >= MAXIMUM_USERS_FOR_ONE_ROOM) {
+      makeRoomInvisible(roomId)
+    } else {
+      makeRoomVisible(roomId)
+    }
   }
-  console.log(room?.activeUsers)
 }
 
 export const removeUserFromRoom = (userId: string, roomId: string) => {
   const user = getUserById(userId);
   const room = getRoomById(roomId);
 
-  console.log('USER', user)
-  console.log('ROOM', room)
-
   if (user && room) {
     room.activeUsers = room.activeUsers.filter(user => user.id !== userId)
     setUserRoom(userId, '')
   }
-  console.log('active users on remove', room?.activeUsers)
 }
 
+
+export const checkPlayersReadiness = (roomId: string): boolean => {
+  const room = getRoomById(roomId);
+  if (room) {
+    const players = room.activeUsers;
+
+    const playersAreReady = players.every(player => player.ready)
+    return playersAreReady
+  }
+  return false
+}

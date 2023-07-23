@@ -12,12 +12,14 @@ router.get('/', (req, res) => {
 });
 
 router.get('/rooms', (req, res, next) => {
-	const rooms = getVisibleRooms(MAXIMUM_USERS_FOR_ONE_ROOM);
+	const rooms = getVisibleRooms();
 	const data = {
 		rooms,
 		maxUsers: MAXIMUM_USERS_FOR_ONE_ROOM
 	}
 	res.json(data)
 })
+
+
 
 export default router;
