@@ -16,3 +16,21 @@
 .hidden{
   display: none;
 }
+
+#text-container {
+  font-size: 20px;
+  color: black;
+}
+
+.correct {
+  background-color: green;
+  color: white;
+  font-weight: 600;
+}
+
+.next-char {
+  background-color: red;
+  color: white;
+  font-size: 23px;
+  font-weight: 600;
+}
