@@ -1,3 +1,5 @@
+import { getRoomByName } from "./roomsHelpers";
+
 export interface Player {
   name: string;
   progress: number;
@@ -20,12 +22,16 @@ export const getPlayers = (roomName: string) => {
 }
 
 export const createGameRoom = (roomName: string) => {
-  const newRoom: Game = {
-    room: roomName,
-    players: []
+  const index = games.findIndex(game => game.room === roomName);
+
+  if (index === -1) {
+    const newRoom: Game = {
+      room: roomName,
+      players: []
+    }
+    games.push(newRoom)
   }
 
-  games.push(newRoom)
 }
 
 export const checkPlayerExistence = (name: string, roomName: string) => {
@@ -76,9 +82,13 @@ export const addPlayer = (name: string, roomName: string) => {
 export const removePlayer = (name: string, roomName: string) => {
   const playerExists = checkPlayerExistence(name, roomName);
   let players = getPlayers(roomName)
+  const room = getRoom(roomName)
 
-  if (playerExists && players) {
+
+  if (playerExists && players && room) {
     players = players.filter(player => player.name !== name)
+    room.players = players;
+    console.log('games ', games)
   }
 }
 
@@ -98,10 +108,10 @@ export const setPlayerFinishTime = (name: string, finishTime: number, roomName: 
 
 export const checkGameFinish = (roomName: string): boolean => {
   const players = getPlayers(roomName)
+  console.log('checkGameFinish', players)
 
   if (players) {
     const gameIsFinished = players.every(player => player.timeToFinish > 0);
-
     if (gameIsFinished) return true;
   }
 

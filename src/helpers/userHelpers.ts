@@ -63,10 +63,10 @@ export const clearUserCurrentRoom = (userId: string) => {
   }
 }
 
-export const resetUsersReadiness = (roomName: string) => {
-  const selectedUsers = activeUsers.filter(user => user.currentRoom === roomName);
+export const resetUsersReadiness = (userId: string) => {
+  const selectedUser = getUserById(userId);
 
-  if (selectedUsers) {
-    selectedUsers.forEach(user => user.ready = false)
+  if (selectedUser) {
+    selectedUser.ready = false;
   }
 }

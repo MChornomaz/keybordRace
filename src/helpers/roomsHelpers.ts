@@ -10,11 +10,6 @@ export interface Room {
 
 let activeRooms: Room[] = [];
 
-export const getActiveRooms = (): Room[] => {
-  return activeRooms.filter(room => room.isVisible)
-}
-
-
 
 export const getVisibleRooms = () => {
   return activeRooms.filter(room => room.isVisible)
