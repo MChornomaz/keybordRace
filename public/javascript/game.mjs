@@ -27,7 +27,7 @@ let newRoomName = '';
 
 const fetchRooms = async () => {
 	try {
-		const data = await fetch('http://localhost:3002/game/rooms')
+		const data = await fetch('https://keybordrace.onrender.com/game/rooms')
 		const roomsData = await data.json()
 		outputRooms(roomsData.rooms, roomsData.maxUsers)
 	} catch (error) {
