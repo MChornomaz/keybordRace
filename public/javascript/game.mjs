@@ -3,7 +3,7 @@ import { outputRooms } from "./utils/outputRooms.mjs";
 import { startTimer } from "./utils/timer.mjs";
 import { showInputModal, showMessageModal, showResultsModal } from "./views/modal.mjs";
 import {  removeRoomElement, updateNumberOfUsersInRoom } from "./views/room.mjs";
-import { appendUserElement} from "./views/user.mjs";
+import { appendUserElement, setProgress} from "./views/user.mjs";
 
 const username = sessionStorage.getItem('username');
 sessionStorage.removeItem('roomId');
@@ -168,6 +168,10 @@ const finishGameHandler = () => {
 	textContainer.innerHTML = ''
 	socket.emit('ResetGame')
 }
+
+socket.on('checkProgress', playersData => {
+	playersData.forEach(player => setProgress({username: player.name, progress: player.progress}))
+})
 
 socket.on('RaceStart', ({  gameTime }) => {
     gameTimerContainer.classList.remove('display-none');

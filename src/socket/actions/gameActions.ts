@@ -89,7 +89,6 @@ export function timeIsOutHandler(socket: Socket, io: Server) {
     const user = getUserById(socket.id);
     if (user) {
       const sortedPlayers = sortResults(user.currentRoom);
-      console.log(sortResults)
       io.to(user.currentRoom).emit('gameIsOver', sortedPlayers)
     }
   })

@@ -18,8 +18,10 @@ export function createRoomHandler(socket: Socket, io: Server) {
       socket.emit('roomExists', roomName);
     } else {
       const newRoom = createRoom(roomName);
-      const roomId = newRoom.id;
-      socket.emit('roomCreated', roomId);
+      if (newRoom) {
+        const roomId = newRoom.id;
+        socket.emit('roomCreated', roomId);
+      }
 
       refreshActiveRooms(io)
     }

@@ -88,7 +88,6 @@ export const removePlayer = (name: string, roomName: string) => {
   if (playerExists && players && room) {
     players = players.filter(player => player.name !== name)
     room.players = players;
-    console.log('games ', games)
   }
 }
 
@@ -108,7 +107,6 @@ export const setPlayerFinishTime = (name: string, finishTime: number, roomName: 
 
 export const checkGameFinish = (roomName: string): boolean => {
   const players = getPlayers(roomName)
-  console.log('checkGameFinish', players)
 
   if (players) {
     const gameIsFinished = players.every(player => player.timeToFinish > 0);

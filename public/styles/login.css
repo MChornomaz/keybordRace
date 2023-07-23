@@ -16,3 +16,17 @@
   padding: 0 15px;
   margin-left: 10px;
 }
+
+#login-page{
+  background-image: url('https://img.freepik.com/premium-photo/funny-nerd-young-businessman-man-working-computer-typing-keyboard-programmer-glasses-front-computer_150455-1700.jpg?w=2000');
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.title{
+  font-size: 50px;
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  font-style: italic;
+}

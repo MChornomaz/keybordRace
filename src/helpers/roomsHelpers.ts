@@ -26,18 +26,20 @@ export const checkRoomNameExistence = (roomName: string): boolean => {
   }
 }
 
-export const createRoom = (roomName: string): Room => {
+export const createRoom = (roomName: string) => {
   const roomId = Date.now().toString() + (Math.floor(Math.random() * 100)).toString();
-  const newRoom = {
-    id: roomId,
-    name: roomName,
-    activeUsers: [],
-    isVisible: true
+  if (roomName.trim().length > 0) {
+    const newRoom = {
+      id: roomId,
+      name: roomName,
+      activeUsers: [],
+      isVisible: true
+    }
+
+    activeRooms.push(newRoom);
+
+    return newRoom
   }
-
-  activeRooms.push(newRoom);
-
-  return newRoom
 }
 
 export const deleteRoom = (id: string) => {

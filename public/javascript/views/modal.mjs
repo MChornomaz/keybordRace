@@ -7,7 +7,7 @@ const showInputModal = ({ title, onChange = () => {}, onSubmit = () => {} }) => 
 
 	const submitButton = createElement({
 		tagName: 'button',
-		className: 'submit-btn',
+		className: 'submit-btn glow-on-hover',
 		innerElements: ['Submit'],
 	});
 	const inputElement = createElement({
@@ -49,7 +49,7 @@ const showResultsModal = ({ usersSortedArray, onClose = () => {} }) => {
 
 	const closeButton = createElement({
 		tagName: 'button',
-		className: 'submit-btn',
+		className: 'submit-btn glow-on-hover',
 		attributes: { id: 'quit-results-btn' },
 		innerElements: ['Close'],
 	});
@@ -71,7 +71,7 @@ const showMessageModal = ({ message, onClose = () => {} }) => {
 
 	const closeButton = createElement({
 		tagName: 'button',
-		className: 'submit-btn',
+		className: 'submit-btn glow-on-hover',
 		innerElements: ['Close'],
 	});
 

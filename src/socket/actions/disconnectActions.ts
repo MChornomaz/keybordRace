@@ -17,7 +17,6 @@ export function disconnectHandler(socket: Socket, io: Server) {
         const gameIsOver = checkGameFinish(user.currentRoom);
         if (gameIsOver) {
           const sortedPlayers = sortResults(user.currentRoom);
-          console.log('sorted', sortedPlayers)
           io.to(room.name).emit('gameIsOver', sortedPlayers)
         }
         socket.leave(room.id);

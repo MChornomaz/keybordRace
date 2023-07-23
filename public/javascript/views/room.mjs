@@ -20,7 +20,7 @@ const appendRoomElement = ({ name, numberOfUsers, onJoin = () => {} }) => {
 
 	const joinButton = createElement({
 		tagName: 'button',
-		className: 'join-btn',
+		className: 'join-btn glow-on-hover',
 		attributes: { 'data-room-name': name },
 		innerElements: ['Join'],
 	});

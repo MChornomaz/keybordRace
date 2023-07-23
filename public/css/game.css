@@ -1,8 +1,81 @@
+#rooms-page{
+  background-image: url('https://static5.depositphotos.com/1006542/522/i/450/depositphotos_5226937-Timid-nerd-hiding-under-computer-keyboard.jpg');
+  background-size: cover;
+  background-position: 50% 50%;
+
+}
+
 #rooms-wrapper{
   width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 30px
+}
+
+.main-title{
+  font-size: 45px;
+  color: white;
+}
+
+.glow-on-hover{
+  width: 220px;
+    height: 50px;
+    border: none;
+    outline: none;
+    color: #fff;
+    background: #111;
+    cursor: pointer;
+    position: relative;
+    z-index: 0;;
+    border-radius: 10px;
+    font-size: 20px;
+}
+
+.glow-on-hover:before {
+    content: '';
+    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    position: absolute;
+    top: -2px;
+    left:-2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowing 20s linear infinite;
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+    border-radius: 10px;
+}
+
+.glow-on-hover:active {
+    color: #000
+}
+
+.glow-on-hover:active:after {
+    background: transparent;
+}
+
+.glow-on-hover:hover:before {
+    opacity: 1;
+}
+
+.glow-on-hover:after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #111;
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+}
+
+@keyframes glowing {
+    0% { background-position: 0 0; }
+    50% { background-position: 400% 0; }
+    100% { background-position: 0 0; }
 }
 
 .card{
@@ -33,4 +106,56 @@
   color: white;
   font-size: 23px;
   font-weight: 600;
+}
+
+.room{
+  background-color: rgba(255, 255, 255, 0.415)
+  }
+
+.room-name{
+  font-size: 20px;
+  text-transform: uppercase;
+}
+
+.modal{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 500px;
+  padding: 0 4rem 2rem;
+  background: linear-gradient(to right, hsl(210, 30%, 20%), hsl(255, 30%, 25%));
+}
+
+.modal .title {
+  font-weight: normal;
+  letter-spacing: .3rem;
+  color: white;
+  max-height: 100%;
+
+}
+
+.modal-input{
+  font-size: 20px;
+}
+
+#game-page{
+  background-image: url('https://img.freepik.com/premium-photo/nerd-in-glasses-with-keyboard-in-studio_251859-3818.jpg?w=2000');
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+#game-container{
+  background: rgba(255, 255, 255, 0.736);
+}
+
+.inputs-wrapper{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.user-result{
+  color: white;
+  font-size: 20px;
 }
